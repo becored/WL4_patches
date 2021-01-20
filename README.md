@@ -1,3 +1,3 @@
 # Wario Land 4 Patches
-Some patches of rewritten subroutines in Wario Land 4.
-Hopuefully those can be useful as an entry point for your own code.
+Patches of rewritten subroutines for Wario Land 4 hacking.  
+Those can be useful as an entry point for your own code.  
