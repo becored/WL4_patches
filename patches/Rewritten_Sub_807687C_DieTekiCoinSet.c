@@ -27,6 +27,6 @@ void Rewritten_Sub_807687C_DieTekiCoinSet(unsigned char k, unsigned short y, uns
     // Vanilla code
     ++ ucTekiKillCnt;
     if(!num) return;
-    Sub_80767DC_ScoreBunCoinDasu(y, x, num);
-    Sub_801E328_EnemyChildSet(13, 0, 0, y, x);
+    Sub_80767DC_ScoreBunCoinDasu(y, x, num);    // generate coin
+    Sub_801E328_EnemyChildSet(13, 0, 0, y, x);  // generate heart piece
 }
