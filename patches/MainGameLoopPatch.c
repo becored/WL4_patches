@@ -10,7 +10,6 @@
 #define Sub_8000954_SetKeyPressWRAM ((void (*)()) 0x8000955)
 #define Sub_80007BC_SoftResetCheck ((void (*)()) 0x80007BD)
 
-__attribute__((no_caller_saved_registers))
 void MainGameLoopPatch() {
     // Vanilla code
     Sub_8000954_SetKeyPressWRAM();

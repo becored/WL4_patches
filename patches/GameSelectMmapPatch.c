@@ -8,7 +8,6 @@
 #define sub_80845F0 ((int (*)()) 0x80845F1)
 #define sub_807A700 ((int (*)()) 0x807A701)
 
-__attribute__((no_caller_saved_registers))
 void GameSelectMmapPatch() {
     // Vanilla code
     if ( sub_80845F0() && sub_807A700() ) {

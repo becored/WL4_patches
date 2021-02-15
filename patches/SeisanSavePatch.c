@@ -9,7 +9,6 @@
 #define W4ItemStatus ((volatile unsigned char*) 0x3000A68)
 #define ucKagiGetFlg (*(volatile unsigned char*) 0x3000C0C)
 
-__attribute__((no_caller_saved_registers))
 void SeisanSavePatch() {
     // Vanilla code
     if (ucKagiGetFlg) {

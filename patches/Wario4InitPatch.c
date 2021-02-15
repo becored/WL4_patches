@@ -9,7 +9,6 @@
 #define s5_super_hard (*(volatile unsigned short*) 0x3002CA2)
 #define REG_DISPCNT (*(volatile unsigned short*) 0x4000000)
 
-__attribute__((no_caller_saved_registers))
 void Wario4InitPatch() {
     // Custom code
     // TODO

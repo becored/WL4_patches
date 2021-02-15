@@ -7,7 +7,6 @@
 #define usFadeTimer (*(volatile unsigned short*) 0x300188E)
 #define Sub_8005F1C_Wario4_Exec ((void (*)(int)) 0x8005F1D)
 
-__attribute__((no_caller_saved_registers))
 void Wario4ExecPatch() {
     // Vanilla code
     Sub_8005F1C_Wario4_Exec( usFadeTimer++ );

@@ -35,7 +35,6 @@
 // Subroutine
 #define Sub_80917A8_GameReady ((int (*)()) 0x80917A9)
 
-__attribute__((no_caller_saved_registers))
 void GameReadyPatch() {
     // Vanilla code
     if (Sub_80917A8_GameReady()) {
