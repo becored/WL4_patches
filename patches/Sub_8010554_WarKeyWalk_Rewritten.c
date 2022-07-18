@@ -87,6 +87,15 @@ enum WAR_STAT_NORMAL {
 	GOWALK,					//ゴー
 };
 
+struct WJEffDef{
+	unsigned char ucStat;
+	unsigned char ucAnmTimer;			//アニメタイマー
+	unsigned char ucAnmPat;			//アニメパターン
+	unsigned short usPosX;				//Ｘ
+	unsigned short usPosY;				//Ｙ
+	unsigned long iAnmAddr;			//アドレス
+} ;
+
 #define Sub_8001DA4_m4aSongNumStart ((int (*)(int)) 0x8001DA5)
 #define Sub_806DAC0_PanelYakuAllNum_TileEventId ((int (*)(unsigned short,unsigned short)) 0x806DAC1)
 
@@ -112,6 +121,7 @@ enum WAR_STAT_NORMAL {
 #define Wario_ucAnmTimer_HIBYTE (*(volatile unsigned char*) 0x30018B7)
 #define Wario_sMvSpeedX (*(volatile signed short*) 0x30018AE)
 #define Wario_sMvSpeedY (*(volatile signed short*) 0x30018B0)
+#define WarJEff ((volatile struct WJEffDef*) 0x3001950)
 #define WarJEff_BYTE1 (*(volatile unsigned char*) 0x3001951)
 #define WarJEff_LOBYTE (*(volatile unsigned char*) 0x3001950)
 #define WarioLift_LOBYTE (*(volatile unsigned char*) 0x3001948)
