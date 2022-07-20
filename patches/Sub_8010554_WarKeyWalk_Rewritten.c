@@ -116,7 +116,7 @@ struct WJEffDef{
 #define Wario_usMukiY (*(volatile unsigned short*) 0x30018A8)
 #define Wario_usPosX (*(volatile unsigned short*) 0x30018AA)
 #define Wario_usPosY (*(volatile unsigned short*) 0x30018AC)
-#define Wario_ucAnmTimer (*(volatile unsigned short*) 0x30018B6)
+#define Wario_ucAnmTimer (*(volatile unsigned char*) 0x30018B6)
 #define Wario_ucAnmTimer_LOBYTE (*(volatile unsigned char*) 0x30018B6)
 #define Wario_ucAnmTimer_HIBYTE (*(volatile unsigned char*) 0x30018B7)
 #define Wario_sMvSpeedX (*(volatile signed short*) 0x30018AE)
@@ -124,6 +124,7 @@ struct WJEffDef{
 #define WarJEff ((volatile struct WJEffDef*) 0x3001950)
 #define WarJEff_BYTE1 (*(volatile unsigned char*) 0x3001951)
 #define WarJEff_LOBYTE (*(volatile unsigned char*) 0x3001950)
+#define WarioLift_BYTE1 (*(volatile unsigned char*) 0x3001949)
 #define WarioLift_LOBYTE (*(volatile unsigned char*) 0x3001948)
 #define cGmStartFlg (*(volatile unsigned char*) 0x3000C3F)
 #define usWarStopFlg (*(volatile unsigned char*) 0x30019F6)
@@ -269,7 +270,7 @@ int Sub_8010554_WarKeyWalk_Rewritten() {
 	      }
 	    }
 	LABEL_52:
-	    if ( (WarJEff_BYTE1 & 0xF) <= 1 )
+	    if ( (WarioLift_BYTE1 & 0xF) <= 1 )
 	    {
 	      if ( Wario_ucAnmTimer >= byte_82F1200[12 * Wario_ucAnmTimer_HIBYTE + 8] )
 	      {

@@ -106,13 +106,15 @@ struct WJEffDef{
 #define WarioOthr_React ((volatile unsigned int*) 0x82DED90)
 #define WarioMove_React ((volatile unsigned int*) 0x82DECD0)
 
+#define KeyPressContinuous ((volatile unsigned short*) 0x3001844)
+#define usTrg_KeyPress1Frame ((volatile unsigned short*) 0x3001848)
 #define Wario_ucReact (*(volatile unsigned char*) 0x3001898)
 #define Wario_usTimer (*(volatile unsigned short*) 0x30018A4)
 #define Wario_usMukiX (*(volatile unsigned short*) 0x30018A6)
 #define Wario_usMukiY (*(volatile unsigned short*) 0x30018A8)
 #define Wario_usPosX (*(volatile unsigned short*) 0x30018AA)
 #define Wario_usPosY (*(volatile unsigned short*) 0x30018AC)
-#define Wario_ucAnmTimer (*(volatile unsigned short*) 0x30018B6)
+#define Wario_ucAnmTimer (*(volatile unsigned char*) 0x30018B6)
 #define Wario_ucAnmTimer_LOBYTE (*(volatile unsigned char*) 0x30018B6)
 #define Wario_ucAnmTimer_HIBYTE (*(volatile unsigned char*) 0x30018B7)
 #define Wario_sMvSpeedX (*(volatile signed short*) 0x30018AE)
@@ -129,6 +131,7 @@ struct WJEffDef{
 #define ucTimeUp (*(volatile unsigned char*) 0x3000047)
 #define PassageID (*(volatile unsigned char*) 0x3000002)
 #define InPassageLevelID (*(volatile unsigned char*) 0x3000003)
+#define CurrentRoomId (*(volatile unsigned char*) 0x3000024)
 #define usBgEvy (*(volatile unsigned char*) 0x3001870)
 
 #define byte_82F1428 ((volatile unsigned char*) 0x82F1428)
@@ -139,8 +142,6 @@ struct WJEffDef{
 #define Sub_806BF88_BgmChangeInit ((void (*)()) 0x806BF89)
 #define Sub_801D684_EnemyMain ((void (*)()) 0x801D685)
 #define Sub_8074808_WarioHeartMake ((void (*)()) 0x8074809)
-
-#define CurrentRoomId (*(volatile unsigned char*) 0x3000024)
 
 int Sub_801109E_WarKeyDsBrk_Rewritten() {
     // Vanilla code
