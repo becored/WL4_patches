@@ -1,5 +1,5 @@
-// @Description Sub_8011590_WarKeyDAttack_Rewritten
-// @HookAddress 0x2DEE1C
+// @Description Sub_8011650_WarKeyAJump_Rewritten
+// @HookAddress 0x2DEE20
 // @HookString P
 // Mode: Thumb
 // Made by beco
@@ -128,7 +128,7 @@ struct WJEffDef{
 #define CurrentRoomId (*(volatile unsigned char*) 0x3000024)
 #define usBgEvy (*(volatile unsigned char*) 0x3001870)
 
-#define byte_82FC2C4 ((volatile unsigned char*) 0x82FC2C4)
+#define byte_82FC000 ((volatile unsigned char*) 0x82FC000)
 
 #define Sub_8075F44_TmScInit ((void (*)()) 0x8075F45)
 #define Sub_801DE7C_EnemyInit ((void (*)()) 0x801DE7D)
@@ -137,55 +137,41 @@ struct WJEffDef{
 #define Sub_801D684_EnemyMain ((void (*)()) 0x801D685)
 #define Sub_8074808_WarioHeartMake ((void (*)()) 0
 
-int Sub_8011590_WarKeyDAttack_Rewritten() {
+int Sub_8011650_WarKeyAJump_Rewritten() {
     // Vanilla code
 		signed int result;
-	  short v1;
-	  short v2;
 
-		if ( usTrg_KeyPress1Frame[0] & 1 )
+	  if ( usTrg_KeyPress1Frame[0] & 1 )
+	    Wario_ucJpNext = 1;
+	  if ( Wario_usMukiX & 0x10 )
 	  {
-	    Wario_ucJpFlg = 1;
-	    result = 254;
-	  }
-	  else if ( KeyPressContinuous[0] & Wario_usMukiX )
-	  {
-	    if ( KeyPressContinuous[0] & 0x300 )
-	    {
-	      if ( Wario_ucAnmTimer >= byte_82FC2C4[12 * Wario_ucAnmTimer_HIBYTE + 8] )
-	      {
-					Wario_ucAnmTimer_LOBYTE = 0;
-					++Wario_ucAnmTimer_HIBYTE;
-	        if ( byte_82FC2C4[12 * Wario_ucAnmTimer_HIBYTE + 8] )
-	        {
-	          if ( Wario_ucAnmTimer_HIBYTE == 1 )
-	            WarJEff_LOBYTE = 5;
-	        }
-	        else
-	        {
-	          Wario_ucAnmTimer_HIBYTE = 0;
-	        }
-	      }
-	      result = 255;
-	    }
-	    else
-	    {
-	      if ( Wario_usMukiX & 0x10 )
-	        v2 = Wario_sMvSpeedX - 6;
-	      else
-	        v2 = Wario_sMvSpeedX + 6;
-	      Wario_sMvSpeedX = v2;
-	      result = WALK;
-	    }
+	    Wario_sMvSpeedX += 10;
+	    if ( Wario_sMvSpeedX > 96 )
+	      Wario_sMvSpeedX = 96;
 	  }
 	  else
 	  {
-	    if ( Wario_usMukiX & 0x10 )
-	      v1 = Wario_sMvSpeedX - 3;
-	    else
-	      v1 = Wario_sMvSpeedX + 3;
-	    Wario_sMvSpeedX = v1;
-	    result = DSBRK;
+	    Wario_sMvSpeedX -= 10;
+	    if ( Wario_sMvSpeedX < -96 )
+	      Wario_sMvSpeedX = -96;
+	  }
+	  if ( (Wario_usMukiX ^ 0x30) & KeyPressContinuous[0] )
+	  {
+	    Wario_usMukiX ^= 0x30;
+	    if ( Wario_sMvSpeedY < 0 )
+	      Wario_ucJpFlg = 2;
+	    result = 254;
+	  }
+	  else
+	  {
+	    if ( Wario_ucAnmTimer >= byte_82FC000[12 *Wario_ucAnmTimer_HIBYTE + 8] )
+	    {
+				Wario_ucAnmTimer_LOBYTE = 0;
+				++Wario_ucAnmTimer_HIBYTE;
+	      if ( !byte_82FC000[12 * Wario_ucAnmTimer_HIBYTE + 8] )
+	        Wario_ucAnmTimer_HIBYTE = 0;
+	    }
+	    result = 255;
 	  }
 	  return result;
 	}
