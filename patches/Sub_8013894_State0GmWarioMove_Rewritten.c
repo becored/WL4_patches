@@ -1,5 +1,5 @@
-// @Description Sub_8010554_WarKeyWalk_Rewritten
-// @HookAddress 0x2DEDC0
+// @Description Sub_8013894_State0GmWarioMove_Rewritten
+// @HookAddress 0x2DECD0
 // @HookString P
 // Mode: Thumb
 // Made by beco
@@ -96,8 +96,33 @@ struct WJEffDef{
 	unsigned long iAnmAddr;			//アドレス
 } ;
 
+struct WHitDef{
+	unsigned short usMukiX;   //Ｘ移動方向
+	unsigned short usMukiY;   //Ｙ移動方向
+	unsigned char ucFront;   //前方当りポジション
+	unsigned char ucBack;    //後方当りポジション
+	unsigned short sDX;    //当りによる補正Ｘ
+
+	unsigned char ucSide;    //横壊れ有り
+	unsigned char ucHead;    //頭壊れ有り
+	unsigned char ucYuka;    //床壊れ有り
+	unsigned char ucSPow;    //横壊しのパワー
+	unsigned char ucHPow;    //頭
+	unsigned char ucYPow;    //床
+	unsigned char ucWSide;   //横当りで壊れたとき立てる
+	unsigned char ucWHead;   //頭
+	unsigned char ucWYuka;   //床
+	unsigned char ucPlace;
+
+	unsigned char ucSStop;   //横かべのとき立てる
+	unsigned char ucHStop;   //上
+	unsigned char ucYStop;   //床
+} ;
+
 #define Sub_8001DA4_m4aSongNumStart ((int (*)(int)) 0x8001DA5)
 #define Sub_806DAC0_PanelYakuAllNum_TileEventId ((int (*)(unsigned short,unsigned short)) 0x806DAC1)
+#define Sub_800FDBC_WarMoveSpeedX ((int (*)()) 0x800FDBD)
+#define Sub_800FE58_WarMoveConvX ((void (*)()) 0x800FE59)
 
 #define CurrentEnemyData ((volatile struct EnemyDataStructure*) 0x3000104)
 #define EntityLeftOverStateList ((volatile unsigned char*) 0x3000564)
@@ -109,6 +134,7 @@ struct WJEffDef{
 #define KeyPressContinuous ((volatile unsigned short*) 0x3001844)
 #define usTrg_KeyPress1Frame ((volatile unsigned short*) 0x3001848)
 #define Wario_ucReact (*(volatile unsigned char*) 0x3001898)
+#define Wario_ucStat (*(volatile unsigned char*) 0x3001899)
 #define Wario_ucJpNext (*(volatile unsigned char*) 0x300189F)
 #define Wario_ucJpFlg (*(volatile unsigned char*) 0x30018A0)
 #define Wario_usTimer (*(volatile unsigned short*) 0x30018A4)
@@ -116,11 +142,13 @@ struct WJEffDef{
 #define Wario_usMukiY (*(volatile unsigned short*) 0x30018A8)
 #define Wario_usPosX (*(volatile unsigned short*) 0x30018AA)
 #define Wario_usPosY (*(volatile unsigned short*) 0x30018AC)
+#define Wario_ucPlace (*(volatile unsigned char*) 0x30018B2)
 #define Wario_ucAnmTimer (*(volatile unsigned char*) 0x30018B6)
 #define Wario_ucAnmTimer_LOBYTE (*(volatile unsigned char*) 0x30018B6)
 #define Wario_ucAnmTimer_HIBYTE (*(volatile unsigned char*) 0x30018B7)
 #define Wario_sMvSpeedX (*(volatile signed short*) 0x30018AE)
 #define Wario_sMvSpeedY (*(volatile signed short*) 0x30018B0)
+#define WHit (*(volatile struct WHitDef*) 0x3001918)
 #define WarJEff ((volatile struct WJEffDef*) 0x3001950)
 #define WarJEff_BYTE1 (*(volatile unsigned char*) 0x3001951)
 #define WarJEff_LOBYTE (*(volatile unsigned char*) 0x3001950)
@@ -137,8 +165,7 @@ struct WJEffDef{
 #define CurrentRoomId (*(volatile unsigned char*) 0x3000024)
 #define usBgEvy (*(volatile unsigned char*) 0x3001870)
 
-#define byte_82F1200 ((volatile unsigned char*) 0x82F1200)
-#define byte_8307048 ((volatile unsigned char*) 0x8307048)
+#define byte_82DD431 ((volatile unsigned char*) 0x82DD431)
 
 #define Sub_8075F44_TmScInit ((void (*)()) 0x8075F45)
 #define Sub_801DE7C_EnemyInit ((void (*)()) 0x801DE7D)
@@ -147,167 +174,77 @@ struct WJEffDef{
 #define Sub_801D684_EnemyMain ((void (*)()) 0x801D685)
 #define Sub_8074808_WarioHeartMake ((void (*)()) 0x8074809)
 
-int Sub_8010554_WarKeyWalk_Rewritten() {
+int Sub_8013894_State0GmWarioMove_Rewritten() {
     // Vanilla code
-		signed int result;
+		int v0;
 	  int v1;
-	  int v2;
-	  signed int v3;
-	  short v4;
-	  short v5;
-	  short v6;
-	  short v7;
-	  short v8;
-	  unsigned char v9;
+	  int v3;
 
-	  if ( usTrg_KeyPress1Frame[0] & 1 || Wario_ucJpNext )
+	  WHit.ucSide = byte_82DD431[8 * Wario_ucStat];
+	  WHit.ucHead = byte_82DD431[8 * Wario_ucStat + 1];
+	  WHit.ucYuka = byte_82DD431[8 * Wario_ucStat + 2];
+	  Sub_800FE58_WarMoveConvX();
+	  v0 = 0;
+	  switch ( Wario_ucStat ) // switch(Wario current animation)
 	  {
-	    Wario_ucJpFlg = 1;
-	    return 254;
+	    case JUMP:
+	    case SJUMP:
+	    case RJUMP:
+	    case RFLIP:
+	    case MISS:
+	    case MISS2:
+	    case HAJIK:
+	    case AJUMP:
+	    case DAJUMP:
+	    case AFLIP:
+	    case JTHROW:
+	    case LDDOWN:
+	    case NETDOWN:
+	    case HANERU:
+	    case AWATE:
+	    case JCLEAR:
+	      if ( Wario_sMvSpeedY > 0x80 ) // Wario Y speed cannot be too big
+	        v0 = 0x10;
+	      else
+	        v0 = (Wario_sMvSpeedY << 16 >> 19) & 0xFFFF;
+	      Wario_sMvSpeedY -= 8; // Wario Y speed -= 8
+	      break;
+	    case DOKANU:
+	    case DOKAND:
+	      v0 = (Wario_sMvSpeedY << 16 >> 19) & 0xFFFF;
+	      break;
+	    case HIP:
+	    case PHIP:
+	    case FUMI:
+	      v0 = (Wario_sMvSpeedY << 16 >> 19) & 0xFFFF;
+	      Wario_sMvSpeedY -= 0x10;  // Wario Y speed -= 0x10
+	      break;
+	    default:
+	      break;
 	  }
-	  if ( usTrg_KeyPress1Frame[0] & 2 )
+	  Wario_usPosY -= v0; // set Wario's Y position
+	  if ( Wario_sMvSpeedY < -0x80 ) // Wario Y speed cannot be too big
+	    Wario_sMvSpeedY = -0x80;
+	  if ( Wario_ucPlace ) // byte[030018B2] will be 0x02 if Wario in the air
 	  {
-	    if ( WarioLift_LOBYTE )
-	      result = THROW0;
-	    else
-	      result = ATTACK;
-	    return result;
+	    v1 = (Wario_sMvSpeedX << 16 >> 19) & 0xFFFF; // Wario X speed
 	  }
-	  if ( KeyPressContinuous[0] & 0x80 )
-	    return SQUAT;
-	  v1 = (Sub_806DAC0_PanelYakuAllNum_TileEventId((Wario_usPosY + 1) & 0xFFFF, (Wario_usPosX - 30) & 0xFFFF) >> 16) & 0xFF;
-	  v2 = (Sub_806DAC0_PanelYakuAllNum_TileEventId((Wario_usPosY + 1) & 0xFFFF, (Wario_usPosX + 30) & 0xFFFF) >> 16) & 0xFF;
-	  if ( v1 != 11 && v2 != 11 )
-	    v3 = 6;
 	  else
-	    v3 = 1;
-	  if ( KeyPressContinuous[0] & Wario_usMukiX )
 	  {
-	    if ( Wario_usMukiX & 0x10 )
+	    v1 = (Sub_800FDBC_WarMoveSpeedX() << 16 >> 19) & 0xFFFF;
+	    if ( !Wario_ucStat || Wario_ucStat == 0x16 )
 	    {
-	      v4 = Wario_sMvSpeedX;
-	      if ( Wario_sMvSpeedX <= 19 )
+	      if ( Wario_usMukiX & 0x10 )
 	      {
-	        v5 = Wario_sMvSpeedX + v3;
-	LABEL_32:
-	        Wario_sMvSpeedX = v5;
-	        goto LABEL_52;
+	        if ( v1 & 0x8000 )
+	          v1 = 0;
 	      }
-	      if ( !(KeyPressContinuous[0] & 0x300) || WarioLift_LOBYTE )
+	      else if ( v1 << 16 > 0 )
 	      {
-	        v6 = Wario_sMvSpeedX;
-	        if ( Wario_sMvSpeedX > 63 )
-	        {
-	          if ( Wario_sMvSpeedX <= 64 )
-	            goto LABEL_52;
-	          Wario_sMvSpeedX -= 6;
-	          if ( (v6 - 6) > 63 )
-	            goto LABEL_52;
-	        }
-	        else
-	        {
-	          Wario_sMvSpeedX += 6;
-	          if ( (v6 + 6) <= 64 )
-	            goto LABEL_52;
-	        }
-	        Wario_sMvSpeedX = 64;
-	        goto LABEL_52;
-	      }
-	      if ( Wario_sMvSpeedX > 63 )
-	      {
-	        Wario_sMvSpeedX += 2;
-	        if ( (v4 + 2) > 127 )
-	        {
-	          Wario_sMvSpeedX = 128;
-	          return DATTACK;
-	        }
-	      }
-	      else
-	      {
-	        Wario_sMvSpeedX += 6;
+	        v1 = 0;
 	      }
 	    }
-	    else
-	    {
-	      v7 = Wario_sMvSpeedX;
-	      if ( Wario_sMvSpeedX > -20 )
-	      {
-	        v5 = Wario_sMvSpeedX - v3;
-	        goto LABEL_32;
-	      }
-	      if ( !(KeyPressContinuous[0] & 0x300) || WarioLift_LOBYTE )
-	      {
-	        v8 = Wario_sMvSpeedX;
-	        if ( Wario_sMvSpeedX <= -64 )
-	        {
-	          if ( Wario_sMvSpeedX < -64 )
-	          {
-	            Wario_sMvSpeedX += 6;
-	            if ( (v8 + 6) > -64 )
-	              Wario_sMvSpeedX = -64;
-	          }
-	        }
-	        else
-	        {
-	          Wario_sMvSpeedX -= 6;
-	          if ( (v8 - 6) < -64 )
-	            Wario_sMvSpeedX = -64;
-	        }
-	      }
-	      else if ( Wario_sMvSpeedX <= -64 )
-	      {
-	        Wario_sMvSpeedX -= 2;
-	        if ( (v7 - 2) <= -128 )
-	        {
-	          Wario_sMvSpeedX = -128;
-	          return DATTACK;
-	        }
-	      }
-	      else
-	      {
-	        Wario_sMvSpeedX -= 6;
-	      }
-	    }
-	LABEL_52:
-	    if ( (WarioLift_BYTE1 & 0xF) <= 1 )
-	    {
-	      if ( Wario_ucAnmTimer >= byte_82F1200[12 * Wario_ucAnmTimer_HIBYTE + 8] )
-	      {
-	        Wario_ucAnmTimer_LOBYTE = 0;
-	        ++Wario_ucAnmTimer_HIBYTE;
-	        v9 = byte_82F1200[12 * Wario_ucAnmTimer_HIBYTE + 8];
-	        if ( byte_82F1200[12 * Wario_ucAnmTimer_HIBYTE + 8] )
-	        {
-	          if ( Wario_ucAnmTimer_HIBYTE == 2 || Wario_ucAnmTimer_HIBYTE == 9 )
-	            Sub_8001DA4_m4aSongNumStart(1);
-	          return 255;
-	        }
-	LABEL_60:
-	        Wario_ucAnmTimer_HIBYTE = v9;
-	        WarJEff_LOBYTE = 5;
-	        return 255;
-	      }
-	    }
-	    else if ( Wario_ucAnmTimer >= byte_8307048[12 * Wario_ucAnmTimer_HIBYTE + 8] )
-	    {
-	      Wario_ucAnmTimer_LOBYTE = 0;
-	      ++Wario_ucAnmTimer_HIBYTE;
-	      v9 = byte_8307048[12 * Wario_ucAnmTimer_HIBYTE + 8];
-	      if ( byte_8307048[12 * Wario_ucAnmTimer_HIBYTE + 8] )
-	      {
-	        if ( Wario_ucAnmTimer_HIBYTE == 2 || Wario_ucAnmTimer_HIBYTE == 9 )
-	          Sub_8001DA4_m4aSongNumStart(1);
-	        return 255;
-	      }
-	      goto LABEL_60;
-	    }
-	    return 255;
 	  }
-	  if ( ((Wario_sMvSpeedX + 96) & 0xFFFF) > 0xC0 )
-	    return DSBRK;
-	  if ( ((Wario_usMukiX ^ 0x30) & KeyPressContinuous[0]) << 16 )
-	    return TURN;
-	  if ( v3 == 1 )
-	    return WKBRK;
-	  return STOP;
+	  Wario_usPosX += v1;                           // set Wario's X position
+	  return v3;
 	}

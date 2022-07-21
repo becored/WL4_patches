@@ -1,5 +1,5 @@
-// @Description Sub_8010554_WarKeyWalk_Rewritten
-// @HookAddress 0x2DEDC0
+// @Description Sub_8010A9C_WarKeyJump_Rewritten
+// @HookAddress 0x2DEDD0
 // @HookString P
 // Mode: Thumb
 // Made by beco
@@ -147,167 +147,84 @@ struct WJEffDef{
 #define Sub_801D684_EnemyMain ((void (*)()) 0x801D685)
 #define Sub_8074808_WarioHeartMake ((void (*)()) 0x8074809)
 
-int Sub_8010554_WarKeyWalk_Rewritten() {
+int Sub_8010A9C_WarKeyJump_Rewritten() {
     // Vanilla code
-		signed int result;
-	  int v1;
-	  int v2;
-	  signed int v3;
+		unsigned char v0;
+	  unsigned int v2;
+	  short v3;
 	  short v4;
-	  short v5;
-	  short v6;
-	  short v7;
-	  short v8;
-	  unsigned char v9;
+	  int v5;
 
-	  if ( usTrg_KeyPress1Frame[0] & 1 || Wario_ucJpNext )
+	  if ( WarioLift_LOBYTE )
 	  {
-	    Wario_ucJpFlg = 1;
-	    return 254;
+	    v0 = KeyPressContinuous[0] & 0x40 ? WarioLift_BYTE1 | 0x80 : WarioLift_BYTE1 & 0xF;
+	    WarioLift_BYTE1 = v0;
+	    if ( usTrg_KeyPress1Frame[0] & 2 )
+	      return JTHROW;
 	  }
-	  if ( usTrg_KeyPress1Frame[0] & 2 )
+	  if ( usTrg_KeyPress1Frame[0] & 0x80 )
+	    return HIP;
+	  if ( usTrg_KeyPress1Frame[0] & 1 )
+	    Wario_ucJpNext = 1;
+	  if ( (KeyPressContinuous[0] & 0x42) == 64 )
 	  {
-	    if ( WarioLift_LOBYTE )
-	      result = THROW0;
-	    else
-	      result = ATTACK;
-	    return result;
+	    v2 = Sub_806DAC0_PanelYakuAllNum_TileEventId((Wario_usPosY - 119) & 0xFFFF, Wario_usPosX) >> 16;
+	    if ( !WarioLift_LOBYTE && Wario_sMvSpeedY <= 0 )
+	    {
+	      if ( (v2 - 2) <= 1 )
+	        return LDSTOP;
+	      if ( v2 == 4 )
+	        return NETSTOP;
+	    }
 	  }
-	  if ( KeyPressContinuous[0] & 0x80 )
-	    return SQUAT;
-	  v1 = (Sub_806DAC0_PanelYakuAllNum_TileEventId((Wario_usPosY + 1) & 0xFFFF, (Wario_usPosX - 30) & 0xFFFF) >> 16) & 0xFF;
-	  v2 = (Sub_806DAC0_PanelYakuAllNum_TileEventId((Wario_usPosY + 1) & 0xFFFF, (Wario_usPosX + 30) & 0xFFFF) >> 16) & 0xFF;
-	  if ( v1 != 11 && v2 != 11 )
-	    v3 = 6;
-	  else
-	    v3 = 1;
 	  if ( KeyPressContinuous[0] & Wario_usMukiX )
 	  {
 	    if ( Wario_usMukiX & 0x10 )
 	    {
-	      v4 = Wario_sMvSpeedX;
-	      if ( Wario_sMvSpeedX <= 19 )
-	      {
-	        v5 = Wario_sMvSpeedX + v3;
-	LABEL_32:
-	        Wario_sMvSpeedX = v5;
-	        goto LABEL_52;
-	      }
-	      if ( !(KeyPressContinuous[0] & 0x300) || WarioLift_LOBYTE )
-	      {
-	        v6 = Wario_sMvSpeedX;
-	        if ( Wario_sMvSpeedX > 63 )
-	        {
-	          if ( Wario_sMvSpeedX <= 64 )
-	            goto LABEL_52;
-	          Wario_sMvSpeedX -= 6;
-	          if ( (v6 - 6) > 63 )
-	            goto LABEL_52;
-	        }
-	        else
-	        {
-	          Wario_sMvSpeedX += 6;
-	          if ( (v6 + 6) <= 64 )
-	            goto LABEL_52;
-	        }
-	        Wario_sMvSpeedX = 64;
-	        goto LABEL_52;
-	      }
-	      if ( Wario_sMvSpeedX > 63 )
-	      {
-	        Wario_sMvSpeedX += 2;
-	        if ( (v4 + 2) > 127 )
-	        {
-	          Wario_sMvSpeedX = 128;
-	          return DATTACK;
-	        }
-	      }
-	      else
+	      v3 = Wario_sMvSpeedX;
+	      if ( Wario_sMvSpeedX <= 63 )
 	      {
 	        Wario_sMvSpeedX += 6;
+	        if ( (v3 + 6) > 64 )
+	          Wario_sMvSpeedX = 64;
 	      }
 	    }
 	    else
 	    {
-	      v7 = Wario_sMvSpeedX;
-	      if ( Wario_sMvSpeedX > -20 )
-	      {
-	        v5 = Wario_sMvSpeedX - v3;
-	        goto LABEL_32;
-	      }
-	      if ( !(KeyPressContinuous[0] & 0x300) || WarioLift_LOBYTE )
-	      {
-	        v8 = Wario_sMvSpeedX;
-	        if ( Wario_sMvSpeedX <= -64 )
-	        {
-	          if ( Wario_sMvSpeedX < -64 )
-	          {
-	            Wario_sMvSpeedX += 6;
-	            if ( (v8 + 6) > -64 )
-	              Wario_sMvSpeedX = -64;
-	          }
-	        }
-	        else
-	        {
-	          Wario_sMvSpeedX -= 6;
-	          if ( (v8 - 6) < -64 )
-	            Wario_sMvSpeedX = -64;
-	        }
-	      }
-	      else if ( Wario_sMvSpeedX <= -64 )
-	      {
-	        Wario_sMvSpeedX -= 2;
-	        if ( (v7 - 2) <= -128 )
-	        {
-	          Wario_sMvSpeedX = -128;
-	          return DATTACK;
-	        }
-	      }
-	      else
+	      v4 = Wario_sMvSpeedX;
+	      if ( Wario_sMvSpeedX > -64 )
 	      {
 	        Wario_sMvSpeedX -= 6;
+	        if ( (v4 - 6) < -64 )
+	          Wario_sMvSpeedX = -64;
 	      }
 	    }
-	LABEL_52:
-	    if ( (WarioLift_BYTE1 & 0xF) <= 1 )
-	    {
-	      if ( Wario_ucAnmTimer >= byte_82F1200[12 * Wario_ucAnmTimer_HIBYTE + 8] )
-	      {
-	        Wario_ucAnmTimer_LOBYTE = 0;
-	        ++Wario_ucAnmTimer_HIBYTE;
-	        v9 = byte_82F1200[12 * Wario_ucAnmTimer_HIBYTE + 8];
-	        if ( byte_82F1200[12 * Wario_ucAnmTimer_HIBYTE + 8] )
-	        {
-	          if ( Wario_ucAnmTimer_HIBYTE == 2 || Wario_ucAnmTimer_HIBYTE == 9 )
-	            Sub_8001DA4_m4aSongNumStart(1);
-	          return 255;
-	        }
-	LABEL_60:
-	        Wario_ucAnmTimer_HIBYTE = v9;
-	        WarJEff_LOBYTE = 5;
-	        return 255;
-	      }
-	    }
-	    else if ( Wario_ucAnmTimer >= byte_8307048[12 * Wario_ucAnmTimer_HIBYTE + 8] )
-	    {
-	      Wario_ucAnmTimer_LOBYTE = 0;
-	      ++Wario_ucAnmTimer_HIBYTE;
-	      v9 = byte_8307048[12 * Wario_ucAnmTimer_HIBYTE + 8];
-	      if ( byte_8307048[12 * Wario_ucAnmTimer_HIBYTE + 8] )
-	      {
-	        if ( Wario_ucAnmTimer_HIBYTE == 2 || Wario_ucAnmTimer_HIBYTE == 9 )
-	          Sub_8001DA4_m4aSongNumStart(1);
-	        return 255;
-	      }
-	      goto LABEL_60;
-	    }
-	    return 255;
+	    goto LABEL_34;
 	  }
-	  if ( ((Wario_sMvSpeedX + 96) & 0xFFFF) > 0xC0 )
-	    return DSBRK;
-	  if ( ((Wario_usMukiX ^ 0x30) & KeyPressContinuous[0]) << 16 )
-	    return TURN;
-	  if ( v3 == 1 )
-	    return WKBRK;
-	  return STOP;
+	  if ( !((Wario_usMukiX ^ 0x30) & KeyPressContinuous[0]) )
+	  {
+	    if ( Wario_sMvSpeedX <= 0 )
+	    {
+	      if ( Wario_sMvSpeedX >= 0 )
+	        goto LABEL_34;
+	      v5 = Wario_sMvSpeedX + 10;
+	      Wario_sMvSpeedX += 10;
+	      if ( v5 << 16 <= 0 )
+	        goto LABEL_34;
+	    }
+	    else
+	    {
+	      Wario_sMvSpeedX -= 10;
+	      if ( !(Wario_sMvSpeedX & 0x8000) )
+	        goto LABEL_34;
+	    }
+	    Wario_sMvSpeedX = 0;
+	    goto LABEL_34;
+	  }
+	  Wario_usMukiX ^= 0x30u;
+	  Wario_sMvSpeedX = 0;
+	LABEL_34:
+	  if ( !(KeyPressContinuous[0] & 1) && Wario_sMvSpeedY > 0 )
+	    Wario_sMvSpeedY = 0;
+	  return 255;
 	}
