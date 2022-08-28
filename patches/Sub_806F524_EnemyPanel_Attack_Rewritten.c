@@ -58,7 +58,7 @@ struct BgBDdef { // found in /src/gmap/Wario_bg_atari.o (gigaleak)
 	//char undefined;
 };
 
-int Sub_806F524_EnemyPanel_Attack_Rewritten(unsigned short y_grid_pos, unsigned short x_grid_pos, unsigned char L1_tile_terrain_type)
+int Sub_806F524_EnemyPanel_Attack_Rewritten(unsigned short y_grid_pos, unsigned short x_grid_pos, unsigned char L1_tile_ID)
 {
 	signed int v3;
 	signed int v6;
@@ -74,7 +74,7 @@ int Sub_806F524_EnemyPanel_Attack_Rewritten(unsigned short y_grid_pos, unsigned 
 
 	pDestroy.xp = x_grid_pos;
 	pDestroy.yp = y_grid_pos;
-	pDestroy.part = *(unsigned short*)((2 * L1_tile_terrain_type & 0x1FFFF) + CurrentTileset_EventIdTablePointer);
+	pDestroy.part = *(unsigned short*)((2 * L1_tile_ID & 0x1FFFF) + CurrentTileset_EventIdTablePointer);
 	pDestroy.dir = 4;
 	pDestroy.coin = 0;
 	pDestroy.obop = 0;
