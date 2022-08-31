@@ -3,7 +3,7 @@
 // @HookString  024d ae46024d 28470000 49f60608 P
 // Rewritten by beco
 
-#define MEMORY_2039F00 (*(volatile unsigned int*) 0x2039F00)
+#define MEMORY_2039F00 (*(volatile unsigned short*) 0x2039F00)
 
 #define CurrentTileset_EventIdTablePointer (*(volatile unsigned int*) 0x30031FC)
 #define CurrentRoomHeader_TilesetId (*(volatile unsigned char*) 0x3000074)
@@ -61,14 +61,14 @@ struct BgBDdef { // found in /src/gmap/Wario_bg_atari.o (gigaleak)
 int Sub_806F524_EnemyPanel_Attack_Rewritten(unsigned short y_grid_pos, unsigned short x_grid_pos, unsigned char L1_tile_ID)
 {
 	signed int v3;
-	signed int v6;
+	signed int v6 = 0;
 	signed int v7;
-	unsigned int* v8;
+	int v8;
 	int v9;
-	unsigned int* v10;
+	int v10;
 	int v11;
 	int v12;
-	unsigned int* v13;
+	int v13;
 	int i;
   struct BgBDdef pDestroy;
 
@@ -95,9 +95,9 @@ int Sub_806F524_EnemyPanel_Attack_Rewritten(unsigned short y_grid_pos, unsigned 
 				++v8;
 				if ( ++v9 > 63 )
 					break;
-				if ( v8 == ((x_grid_pos << 8) | y_grid_pos) )
+				if ( *(int*)v8 == ((x_grid_pos << 8) | y_grid_pos) )
 				{
-					v8 = 0;
+					*(int*)v8 = 0;
 					v6 = 1;
 					break;
 				}
@@ -134,13 +134,13 @@ int Sub_806F524_EnemyPanel_Attack_Rewritten(unsigned short y_grid_pos, unsigned 
 	v11 = 0;
 	v12 = x_grid_pos << 8;
 	if ( MEMORY_2039F00 == ((x_grid_pos << 8) | y_grid_pos) )
-	return 1;
+			return 1;
 	while ( 1 )
 	{
 		++v10;
 		if ( ++v11 > 63 )
-		break;
-		if ( v10 == (v12 | y_grid_pos) )
+			break;
+		if ( *(int*)v10 == (v12 | y_grid_pos) )
 		{
 			v6 = 1;
 			break;
@@ -151,9 +151,9 @@ int Sub_806F524_EnemyPanel_Attack_Rewritten(unsigned short y_grid_pos, unsigned 
 		v13 = 0x2039F00;
 		for ( i = 0; i <= 63; ++i )
 		{
-			if ( !v13 )
+			if ( !*(int*)v13 )
 			{
-				v13 = v12 | y_grid_pos;
+				*(int*)v13 = v12 | y_grid_pos;
 				Sub_8070098_Panel_PutBG_Only(1, pDestroy.yp, pDestroy.xp);
 				return 1;
 			}
