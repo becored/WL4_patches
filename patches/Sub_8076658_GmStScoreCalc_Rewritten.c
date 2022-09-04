@@ -11,10 +11,6 @@
 #define cGmStScore ((volatile unsigned char*) 0x3000BFC)
 #define ucGmScore_Tflg (*(volatile unsigned char*) 0x3000C02)
 
-// My variables (perhaps unused in original)
-#define ucBainomiGetTrg (*(volatile unsigned char*) 0x3006F00)
-#define ucBainomiCnt (*(volatile unsigned char*) 0x3006F01)
-
 void Sub_8076658_GmStScoreCalc_Rewritten(int num) {
 
   	ucGmScore_Tflg = 1;			// ステージスコアキャラ転送フラグ立てる
