@@ -7,7 +7,7 @@
 #define Sub_8094E38__divsi3 ((int (*)(int,int)) 0x8094E39)
 #define Sub_8094ED0__modsi3 ((int (*)(int,int)) 0x8094ED1)
 
-#define iGmStageScore (*(volatile unsigned char*) 0x3000BF8)
+#define iGmStageScore (*(volatile unsigned int*) 0x3000BF8)
 #define cGmStScore ((volatile unsigned char*) 0x3000BFC)
 #define ucGmScore_Tflg (*(volatile unsigned char*) 0x3000C02)
 
@@ -18,7 +18,7 @@ void Sub_8076658_GmStScoreCalc_Rewritten(int num) {
   	iGmStageScore += num;
   	if(iGmStageScore < 0)	iGmStageScore = 0;
 
-  	cGmStScore[4] = iGmStageScore/10000;
+  	cGmStScore[4] = Sub_8094E38__divsi3(iGmStageScore,10000);
   	if(cGmStScore[4] > 9)
   	{
   		cGmStScore[4] = 9;
