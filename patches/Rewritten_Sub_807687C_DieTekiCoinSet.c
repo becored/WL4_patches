@@ -1,6 +1,6 @@
 // @Description Rewritten_Sub_807687C_DieTekiCoinSet
 // @HookAddress 0x7687E
-// @HookString 0248 86460248 00470000 af680708 P
+// @HookString 024d ae46024d 28470000 af680708 P
 // Mode: Thumb
 // Made by beco
 
