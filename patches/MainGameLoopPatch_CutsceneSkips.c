@@ -105,7 +105,7 @@ enum {
 #define Sub_8001ED8_m4aMPlayAllStop ((void (*)()) 0x8001ED9)
 #define Sub_8002D58_MPlayVolumeControl ((void (*)(int,unsigned short,int)) 0x8002D59)
 
-void MainGameLoopPatch_IntroCutsceneSkip() {
+void MainGameLoopPatch_CutsceneSkips() {
     // Vanilla code
     Sub_8000954_SetKeyPressWRAM();
     Sub_80007BC_SoftResetCheck();
