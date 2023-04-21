@@ -114,7 +114,7 @@ enum WAR_STAT_SWIM {
 #define Sub_8014F00_WarHitSWalk ((signed int (*)()) 0x8014F01)
 #define Sub_8014758_WarHitStop ((signed int (*)()) 0x8014759)
 #define Sub_8014268_WarYukaCheck ((signed int (*)(unsigned char,unsigned short,int*)) 0x8014269)
-#define Sub_806DAC0_PanelYakuAllNum_TileEventId ((int (*)(int,int)) 0x806DAC1)
+#define Sub_806DAC0_PanelYakuAllNum_TileEventId ((int (*)(unsigned short, unsigned short))0x806DAC1)
 #define Sub_8016614_GmWarioChng_Swim ((void (*)(unsigned char)) 0x8016615)
 #define Sub_8012BAC_GmWarioChng ((void (*)(unsigned char)) 0x8012BAD)
 
@@ -278,7 +278,7 @@ LABEL_26:
         default:
           break;
       }
-      if ( WHit.usMukiY & 0x80 && Sub_806DAC0_PanelYakuAllNum_TileEventId(Wario_usPosY, Wario_usPosX) == 1 )
+      if ( WHit.usMukiY & 0x80 && (Sub_806DAC0_PanelYakuAllNum_TileEventId(Wario_usPosY, Wario_usPosX) & 0xFF) == 1 )
       {
         Wario_ucReact = 1;                      // set swimming wario
         if ( Wario_ucStat == PHIP )
@@ -287,7 +287,7 @@ LABEL_26:
         }
         else
         {
-          if ( ((Wario_ucStat - 19) & 0xFFu) <= 1 )
+          if ( ((Wario_ucStat - 19) & 0xFF) <= 1 )
             Wario_ucMiss = 96;
           Sub_8016614_GmWarioChng_Swim(SWCHNG);
         }
